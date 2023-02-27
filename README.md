@@ -1,0 +1,1 @@
+Накатить миграции - `prisma migrate dev --name init`
