@@ -23,6 +23,14 @@ const resolvers = {
       context: Context
     ) {
       const password = await hash(args.password, 10)
+
+      const targetEmailUser = await context.prisma.user.findUnique({
+        where: { email: args.email }
+      })
+
+      if (targetEmailUser) {
+        throw new Error('User already exists');
+      }
  
       const user = await context.prisma.user.create({
         data: { ...args, password }
@@ -57,6 +65,11 @@ const resolvers = {
       }
  
       const token = sign({ userId: user.id }, APP_SECRET)
+
+      await context.prisma.token.update({
+        where: { userId: user.id },
+        data: { token }
+      });
  
       return { token, user }
     },

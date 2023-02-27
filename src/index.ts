@@ -58,8 +58,10 @@ const main = () => {
     wsServer
   )
 
-  httpServer.listen(PORT, () => {
-    console.info(`Server is running on http://localhost:${PORT}/graphql`)
+  const serverPort = PORT || 4000;
+
+  httpServer.listen(serverPort, () => {
+    console.info(`Server is running on http://localhost:${serverPort}/graphql`)
   }) 
 }
 
