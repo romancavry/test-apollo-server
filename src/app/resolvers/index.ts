@@ -4,7 +4,6 @@ import type { PubSub } from 'graphql-yoga';
 
 import { APP_SECRET } from 'config'
 
-import { messages } from 'app/graphql/mock';
 import { Context } from 'app/graphql/context';
 
 const subscribers: any[] = [];
@@ -12,9 +11,9 @@ const subscribers: any[] = [];
 const onMessagesUpdate = (fn: any) => subscribers.push(fn);
 
 const resolvers = {
-  Query: {
-    messages: () => messages,
-  },
+  // Query: {
+  //   messages: () => messages,
+  // },
 
   Mutation: {
     async signup(
@@ -92,31 +91,37 @@ const resolvers = {
       return { token };
     },
 
-    postMessage: (_: unknown, { user, content }: { user: string; content: string }) => {
-      const id = messages.length;
+    // postMessage: (_: unknown, { user, content }: { user: string; content: string }) => {
+    //   const id = messages.length;
 
-      messages.push({
-        id,
-        user,
-        content,
-      })
+    //   messages.push({
+    //     id,
+    //     user,
+    //     content,
+    //   })
 
-      subscribers.forEach(fn => fn());
+    //   subscribers.forEach(fn => fn());
 
-      return id;
-    }
+    //   return id;
+    // }
   },
 
   Subscription: {
     messages: {
-      subscribe: (_: unknown, _2: unknown, { pubSub }: { pubSub: PubSub<any> }) => {
+      subscribe: async (_: unknown, _2: unknown, context: Context) => {
+        const { prisma, pubSub } = context;
+
         const channel = Math.random().toString(36).slice(2, 15);
- 
+
+        const messages = await prisma.message.findMany({
+          take: 50,
+        });
+        console.log('messages: ', messages);
+
         onMessagesUpdate(() => pubSub.publish('messages', channel, messages));
         // Get messages immediately, not waiting someone to send one
         setTimeout(() => pubSub.publish('messages', channel, messages), 0);
 
-        console.log('messages: ', messages);
         return pubSub.subscribe('messages', channel);
       },
       resolve: (payload: any) => payload
