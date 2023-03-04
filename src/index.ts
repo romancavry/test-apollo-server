@@ -7,7 +7,7 @@ import { WebSocketServer } from 'ws';
 
 import { PORT } from 'config';
 
-import createYogaApp from "./app/graphql/server";
+import createYogaApp from 'app/graphql/server';
 
 const main = () => {
   const { yogaApp } = createYogaApp();

@@ -8,27 +8,34 @@ datasource db {
 }
 
 model User {
-  id                Int       @id @default(autoincrement())
-  name              String
-  email             String   @unique
-  password          String
-  sentMessages      Message[] @relation("sentMessages")
-  receivedMessages  Message[] @relation("receivedMessages")
-  createdAt         DateTime @default(now())
+  id           Int        @id @default(autoincrement())
+  name         String
+  password     String
+  email        String     @unique
+  sentMessages Message[]
+  dialogues    Dialogue[]
+  createdAt    DateTime   @default(now())
+}
+
+model Dialogue {
+  id           Int       @id @default(autoincrement())
+  name         String
+  participants User[]
+  messages     Message[]
 }
 
 model Message {
-  id                Int    @id @default(autoincrement())
-  text              String
-  sender            User   @relation(name: "sentMessages", fields: [senderId], references: [id])
-  receiver          User   @relation(name: "receivedMessages", fields: [receiverId], references: [id])
-  senderId          Int
-  receiverId        Int
-  createdAt         DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  text       String
+  sender     User     @relation(fields: [senderId], references: [id])
+  senderId   Int
+  Dialogue   Dialogue @relation(fields: [dialogueId], references: [id])
+  dialogueId Int
+  createdAt  DateTime @default(now())
 }
 
 model Token {
-  userId            Int    @id @unique
-  token             String  @unique
-  createdAt         DateTime @default(now())
+  userId    Int      @id @unique
+  token     String   @unique
+  createdAt DateTime @default(now())
 }

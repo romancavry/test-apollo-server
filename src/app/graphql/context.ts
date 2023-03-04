@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client'
 import { createPubSub } from 'graphql-yoga';
-import type { PubSub } from 'graphql-yoga';
+import type { PubSub, YogaInitialContext } from 'graphql-yoga'
+
+import { authenticateUser } from 'middlewares/auth/auth';
 
 const prisma = new PrismaClient()
 
@@ -9,13 +11,13 @@ const pubSub = createPubSub();
 export interface Context {
   prisma: PrismaClient
   pubSub: PubSub<any>
-  req: any // HTTP request carrying the `Authorization` header
+  user: null | any // TODO: "User" type
 }
 
-export function createContext(req: any) {
+export const createContext = async (initialContext: YogaInitialContext) => {
   return {
-    ...req,
     prisma,
     pubSub,
+    // user: await authenticateUser(prisma, initialContext.request)
   }
 }

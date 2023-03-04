@@ -1,12 +1,13 @@
+// import type { Prisma } from '@prisma/client'
 import { hash, compare } from 'bcryptjs'
-import { sign, verify } from 'jsonwebtoken'
-import type { PubSub } from 'graphql-yoga';
+import { sign } from 'jsonwebtoken'
+import { nanoid } from 'nanoid';
 
 import { APP_SECRET } from 'config'
 
 import { Context } from 'app/graphql/context';
 
-const subscribers: any[] = [];
+const subscribers: (() => void)[] = [];
 
 const onMessagesUpdate = (fn: any) => subscribers.push(fn);
 
@@ -17,13 +18,13 @@ const resolvers = {
 
   Mutation: {
     async signup(
-      _: unknown,
+      _parent: unknown,
       args: { email: string; password: string; name: string },
-      context: Context
+      { prisma }: Context
     ) {
       const password = await hash(args.password, 10)
 
-      const targetEmailUser = await context.prisma.user.findUnique({
+      const targetEmailUser = await prisma.user.findUnique({
         where: { email: args.email }
       })
 
@@ -31,14 +32,14 @@ const resolvers = {
         throw new Error('User already exists');
       }
  
-      const user = await context.prisma.user.create({
+      const user = await prisma.user.create({
         data: { ...args, password }
       })
  
       const token = sign({ userId: user.id }, APP_SECRET)
 
       // save token
-      await context.prisma.token.create({
+      await prisma.token.create({
         data: { userId: user.id, token }
       })
  
@@ -46,11 +47,11 @@ const resolvers = {
     },
 
     async login(
-      _: unknown,
+      _parent: unknown,
       args: { email: string; password: string },
-      context: Context
+      { prisma }: Context
     ) {
-      const user = await context.prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: { email: args.email }
       })
 
@@ -65,7 +66,7 @@ const resolvers = {
  
       const token = sign({ userId: user.id }, APP_SECRET)
 
-      await context.prisma.token.update({
+      await prisma.token.update({
         where: { userId: user.id },
         data: { token }
       });
@@ -74,13 +75,13 @@ const resolvers = {
     },
 
     async verifyToken(
-      _: unknown,
+      _parent: unknown,
       args: { token: string },
-      context: Context
+      { prisma }: Context
     ) {
       const { token } = args;
 
-      const user = await context.prisma.token.findUnique({
+      const user = await prisma.token.findUnique({
         where: { token }
       });
 
@@ -91,34 +92,61 @@ const resolvers = {
       return { token };
     },
 
-    // postMessage: (_: unknown, { user, content }: { user: string; content: string }) => {
-    //   const id = messages.length;
+    async postMessage(
+      _parent: unknown,
+      args: { text: string, dialogueId: number },
+      { prisma }: Context
+    ) {
+      const { text } = args;
+      
+      const createdMessage = await prisma.message.create({
+        data: {
+          text,
+          dialogueId: 1, // TODO
+          senderId: 2, // TODO
+        },
+      })
+  
+      subscribers.forEach(fn => fn());
+  
+      return createdMessage.id;
+    },
 
-    //   messages.push({
-    //     id,
-    //     user,
-    //     content,
-    //   })
-
-    //   subscribers.forEach(fn => fn());
-
-    //   return id;
-    // }
+    async createDialogue(
+      _parent: unknown,
+      args: { name: string },
+      { prisma }: Context
+    ) {
+      const { name } = args;
+      
+      const createdDialogue = await prisma.dialogue.create({
+        data: {
+          name,
+        },
+      })
+    
+      return createdDialogue.id;
+    } 
   },
 
   Subscription: {
     messages: {
-      subscribe: async (_: unknown, _2: unknown, context: Context) => {
-        const { prisma, pubSub } = context;
+      subscribe: async (_parent: unknown, _args: never, { prisma, pubSub }: Context) => {
+        const channel = nanoid();
 
-        const channel = Math.random().toString(36).slice(2, 15);
+        const getActualMessages = async () => {
+          return await prisma.message.findMany({
+            take: 50,
+          });
+        }
 
-        const messages = await prisma.message.findMany({
-          take: 50,
-        });
+        const messages = getActualMessages();
         console.log('messages: ', messages);
 
-        onMessagesUpdate(() => pubSub.publish('messages', channel, messages));
+        onMessagesUpdate(async () => {
+          return pubSub.publish('messages', channel, getActualMessages());
+        });
+
         // Get messages immediately, not waiting someone to send one
         setTimeout(() => pubSub.publish('messages', channel, messages), 0);
 

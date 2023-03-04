@@ -15,6 +15,7 @@
       "services": ["services"],
       "app": ["app"],
       "modules": ["modules"],
+      "middlewares": ["middlewares"],
     }, 
     "typeRoots": ["./types", "./node_modules/@types"]
   } 
