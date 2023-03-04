@@ -8,10 +8,12 @@ const prisma = new PrismaClient()
 
 const pubSub = createPubSub();
 
-export interface Context {
-  prisma: PrismaClient
-  pubSub: PubSub<any>
-  user: null | any // TODO: "User" type
+declare global {
+  interface Context {
+    prisma: PrismaClient
+    pubSub: PubSub<any>
+    user: null | any // TODO: "User" type
+  }
 }
 
 export const createContext = async (initialContext: YogaInitialContext) => {
