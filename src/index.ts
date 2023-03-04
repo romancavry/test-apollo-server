@@ -13,19 +13,21 @@ const main = () => {
   const { yogaApp } = createYogaApp();
 
   const httpServer = createServer(yogaApp);
-  
+
   const wsServer = new WebSocketServer({
     server: httpServer,
-    path: yogaApp.graphqlEndpoint
-  })
-  
+    path: yogaApp.graphqlEndpoint,
+  });
+
   useServer(
     {
       execute: args => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const argsRootValue = args.rootValue as any;
         return argsRootValue.execute(args);
       },
       subscribe: args => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const argsRootValue = args.rootValue as any;
         return argsRootValue.subscribe(args);
       },
@@ -35,9 +37,9 @@ const main = () => {
             ...ctx,
             req: ctx.extra.request,
             socket: ctx.extra.socket,
-            params: msg.payload
-          })
-   
+            params: msg.payload,
+          });
+
         const args = {
           schema,
           operationName: msg.payload.operationName,
@@ -46,23 +48,23 @@ const main = () => {
           contextValue: await contextFactory(),
           rootValue: {
             execute,
-            subscribe
-          }
-        }
-   
-        const errors = validate(args.schema, args.document)
-        if (errors.length) return errors
-        return args
-      }
+            subscribe,
+          },
+        };
+
+        const errors = validate(args.schema, args.document);
+        if (errors.length) return errors;
+        return args;
+      },
     },
-    wsServer
-  )
+    wsServer,
+  );
 
   const serverPort = PORT || 4000;
 
   httpServer.listen(serverPort, () => {
-    console.info(`Server is running on http://localhost:${serverPort}/graphql`)
-  }) 
-}
+    console.info(`Server is running on http://localhost:${serverPort}/graphql`);
+  });
+};
 
 void main();

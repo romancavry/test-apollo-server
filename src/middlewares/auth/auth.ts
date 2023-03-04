@@ -1,11 +1,11 @@
-import { PrismaClient, User } from '@prisma/client'
-import { JwtPayload, verify } from 'jsonwebtoken'
- 
-import { APP_SECRET } from 'config'
- 
+import { PrismaClient, User } from '@prisma/client';
+import { JwtPayload, verify } from 'jsonwebtoken';
+
+import { APP_SECRET } from 'config';
+
 export const authenticateUser = async (
   prisma: PrismaClient,
-  request: Request
+  request: Request,
 ): Promise<User | null> => {
   const header = request.headers.get('authorization');
 
@@ -17,6 +17,6 @@ export const authenticateUser = async (
 
     return await prisma.user.findUnique({ where: { id: userId } });
   }
- 
-  return null
-}
+
+  return null;
+};

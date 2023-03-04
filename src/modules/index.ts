@@ -24,7 +24,7 @@ const resolvers = {
 
   Subscription: {
     messages,
-  }
-}
+  },
+};
 
 export default resolvers;

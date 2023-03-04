@@ -1,12 +1,12 @@
 const verifyToken = async (
   _parent: unknown,
   args: { token: string },
-  { prisma }: Context
+  { prisma }: Context,
 ) => {
   const { token } = args;
 
   const user = await prisma.token.findUnique({
-    where: { token }
+    where: { token },
   });
 
   if (!user) {

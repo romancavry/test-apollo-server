@@ -1,15 +1,15 @@
 const createDialogue = async (
   _parent: unknown,
   args: { name: string },
-  { prisma }: Context
+  { prisma }: Context,
 ) => {
   const { name } = args;
-  
+
   const createdDialogue = await prisma.dialogue.create({
     data: {
       name,
     },
-  })
+  });
 
   return createdDialogue.id;
 };

@@ -10,6 +10,5 @@ export const {
   DATABASE_URL,
   PORT,
   NODE_ENV,
-  APP_SECRET
+  APP_SECRET,
 } = process.env as Record<string, string>;
-
