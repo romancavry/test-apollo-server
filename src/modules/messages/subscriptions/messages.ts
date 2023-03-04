@@ -1,5 +1,7 @@
 import { nanoid } from 'nanoid';
 
+import type { Context } from 'app/graphql/context';
+
 import { subscribers } from 'modules/dialogues';
 
 const onMessagesUpdate = (fn: () => void) => subscribers.push(fn);
@@ -13,7 +15,7 @@ export default {
     const channel = nanoid();
 
     const getActualMessages = async () =>
-      await prisma.message.findMany({
+      prisma.message.findMany({
         take: 50,
       });
 

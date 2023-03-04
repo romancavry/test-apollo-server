@@ -1,3 +1,5 @@
+import type { Context } from 'app/graphql/context';
+
 const createDialogue = async (
   _parent: unknown,
   args: { name: string },

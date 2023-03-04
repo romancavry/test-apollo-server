@@ -1,3 +1,5 @@
+import type { Context } from 'app/graphql/context';
+
 import { subscribers } from 'modules/dialogues';
 
 const postMessage = async (

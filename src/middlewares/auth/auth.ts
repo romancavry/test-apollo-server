@@ -13,9 +13,9 @@ export const authenticateUser = async (
     const token = header.split(' ')[1];
     const tokenPayload = verify(token, APP_SECRET) as JwtPayload;
 
-    const userId = tokenPayload.userId;
+    const { userId } = tokenPayload;
 
-    return await prisma.user.findUnique({ where: { id: userId } });
+    return prisma.user.findUnique({ where: { id: userId } });
   }
 
   return null;

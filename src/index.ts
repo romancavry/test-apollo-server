@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // Register project aliases
 import 'module-alias/register';
 
@@ -22,12 +24,10 @@ const main = () => {
   useServer(
     {
       execute: args => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const argsRootValue = args.rootValue as any;
         return argsRootValue.execute(args);
       },
       subscribe: args => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const argsRootValue = args.rootValue as any;
         return argsRootValue.subscribe(args);
       },
@@ -63,8 +63,10 @@ const main = () => {
   const serverPort = PORT || 4000;
 
   httpServer.listen(serverPort, () => {
+    // eslint-disable-next-line no-console
     console.info(`Server is running on http://localhost:${serverPort}/graphql`);
   });
 };
 
+// eslint-disable-next-line no-void
 void main();

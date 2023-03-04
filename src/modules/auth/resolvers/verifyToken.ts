@@ -1,3 +1,5 @@
+import type { Context } from 'app/graphql/context';
+
 const verifyToken = async (
   _parent: unknown,
   args: { token: string },

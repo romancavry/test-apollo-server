@@ -3,6 +3,8 @@ import { sign } from 'jsonwebtoken';
 
 import { APP_SECRET } from 'config';
 
+import type { Context } from 'app/graphql/context';
+
 const login = async (
   _parent: unknown,
   args: { email: string; password: string },
