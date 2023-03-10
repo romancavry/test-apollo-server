@@ -20,7 +20,6 @@ export default {
       });
 
     const messages = getActualMessages();
-    console.log('messages: ', messages);
 
     onMessagesUpdate(async () =>
       pubSub.publish('messages', channel, getActualMessages()),

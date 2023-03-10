@@ -27,6 +27,7 @@ const createYogaApp = () => {
     graphiql: {
       subscriptionsProtocol: 'WS',
     },
+    // @ts-ignore
     schema,
     // plugins: [useGraphQLMiddleware([permissions])]
   });
