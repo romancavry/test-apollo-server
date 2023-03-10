@@ -2,9 +2,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { createSchema, createYoga } from 'graphql-yoga';
-// import { useGraphQLMiddleware } from '@envelop/graphql-middleware';
+import { useGraphQLMiddleware } from '@envelop/graphql-middleware';
 
-// import { permissions } from 'middlewares/auth';
+import { permissions } from 'middlewares';
 
 import resolvers from 'modules';
 import { createContext } from './context';
@@ -23,13 +23,13 @@ const createYogaApp = () => {
   });
 
   const yogaApp = createYoga({
+    plugins: [useGraphQLMiddleware([permissions])],
     context: createContext,
     graphiql: {
       subscriptionsProtocol: 'WS',
     },
     // @ts-ignore
     schema,
-    // plugins: [useGraphQLMiddleware([permissions])]
   });
 
   return { yogaApp };

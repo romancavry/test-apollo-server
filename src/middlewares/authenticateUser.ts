@@ -1,5 +1,7 @@
-import { PrismaClient, User } from '@prisma/client';
-import { JwtPayload, verify } from 'jsonwebtoken';
+import { PrismaClient } from '@prisma/client';
+import type { User } from '@prisma/client';
+import { verify } from 'jsonwebtoken';
+import type { JwtPayload } from 'jsonwebtoken';
 
 import { APP_SECRET } from 'config';
 
@@ -15,9 +17,7 @@ const authenticateUser = async (
       const tokenPayload = verify(token, APP_SECRET) as JwtPayload;
 
       const { userId } = tokenPayload;
-      const user = await prisma.user.findUnique({ where: { id: userId } });
-
-      return user;
+      return prisma.user.findUnique({ where: { id: userId } });
     }
   }
 
