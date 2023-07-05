@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid';
 
 import type { Context } from 'app/graphql/context';
 
-import { subscribers } from 'modules/dialogues';
+import { subscribers } from 'modules/dialogues/subscribers';
 
 const onMessagesUpdate = (fn: () => void) => subscribers.push(fn);
 

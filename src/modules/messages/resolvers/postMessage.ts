@@ -1,6 +1,6 @@
 import type { Context } from 'app/graphql/context';
 
-import { subscribers } from 'modules/dialogues';
+import { subscribers } from 'modules/dialogues/subscribers';
 
 const postMessage = async (
   _parent: unknown,
