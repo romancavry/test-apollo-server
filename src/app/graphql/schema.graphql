@@ -1,5 +1,5 @@
 type Query {
-  getUser: User!
+  getUser: User
 }
 
 type Mutation {
@@ -22,6 +22,7 @@ type User {
   email: String!
   sentMessages: [Message]
   dialogues: [Dialogue]
+  dialoguesIds: [Int]!
   createdAt: String!
 }
 
@@ -36,8 +37,9 @@ type Message {
 type Dialogue {
   id: ID!
   name: String!
-  participants: [User]
+  users: [User]
   messages: [Message]
+  createdAt: String!
 }
 
 type AuthPayload {

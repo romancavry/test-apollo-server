@@ -5,7 +5,7 @@ import { subscribers } from 'modules/dialogues/subscribers';
 const postMessage = async (
   _parent: unknown,
   args: { text: string; dialogueId: number },
-  { prisma }: Context,
+  { prisma, user }: Context,
 ) => {
   const { text } = args;
 
@@ -13,7 +13,7 @@ const postMessage = async (
     data: {
       text,
       dialogueId: 1, // TODO
-      senderId: 2, // TODO
+      senderId: user!.id,
     },
   });
 

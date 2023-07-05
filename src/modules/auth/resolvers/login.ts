@@ -8,8 +8,10 @@ import type { Context } from 'app/graphql/context';
 const login = async (
   _parent: unknown,
   args: { email: string; password: string },
-  { prisma }: Context,
+  context: Context,
 ) => {
+  const { prisma } = context;
+
   const user = await prisma.user.findUnique({
     where: { email: args.email },
   });
@@ -29,6 +31,9 @@ const login = async (
     where: { userId: user.id },
     data: { token },
   });
+
+  // eslint-disable-next-line no-param-reassign
+  context.user = user;
 
   return { token, user };
 };

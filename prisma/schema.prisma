@@ -8,20 +8,22 @@ datasource db {
 }
 
 model User {
-  id           Int        @id @default(autoincrement())
-  name         String
-  password     String
-  email        String     @unique
-  sentMessages Message[]
-  dialogues    Dialogue[]
-  createdAt    DateTime   @default(now())
+  id              Int        @id @default(autoincrement())
+  name            String
+  password        String
+  email           String     @unique
+  sentMessages    Message[]  @relation()
+  dialogues       Dialogue[]
+  dialoguesIds    Int[]
+  createdAt       DateTime   @default(now())
 }
 
 model Dialogue {
   id           Int       @id @default(autoincrement())
   name         String
-  participants User[]
+  users        User[]
   messages     Message[]
+  createdAt    DateTime @default(now())
 }
 
 model Message {

@@ -3,13 +3,18 @@ import type { Context } from 'app/graphql/context';
 const createDialogue = async (
   _parent: unknown,
   args: { name: string },
-  { prisma }: Context,
+  { prisma, user }: Context,
 ) => {
   const { name } = args;
 
   const createdDialogue = await prisma.dialogue.create({
     data: {
       name,
+      users: {
+        connect: {
+          id: user!.id,
+        },
+      },
     },
   });
 
