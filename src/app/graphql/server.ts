@@ -6,7 +6,7 @@ import { useGraphQLMiddleware } from '@envelop/graphql-middleware';
 
 import { permissions } from 'middlewares';
 
-import resolvers from 'modules';
+import resolvers from 'modules/resolvers';
 import { createContext } from './context';
 
 const createYogaApp = () => {
