@@ -6,8 +6,11 @@ type Mutation {
   signup(email: String!, password: String!, name: String!): AuthPayload
   login(email: String!, password: String!): AuthPayload
   verifyToken(token: String!): AuthPayload
+
   postMessage(text: String!): ID!
+
   createDialogue(name: String!): ID!
+  getDialogues(ids: [Int]!): [Dialogue]!
 }
 
 type Subscription {
@@ -38,7 +41,9 @@ type Dialogue {
   id: ID!
   name: String!
   users: [User]
+  usersIds: [Int]!
   messages: [Message]
+  messagesIds: [Int]!
   createdAt: String!
 }
 

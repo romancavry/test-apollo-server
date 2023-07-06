@@ -11,6 +11,7 @@ export const permissions = shield(
     Mutation: {
       createDialogue: isAuthenticated,
       postMessage: isAuthenticated,
+      getDialogues: isAuthenticated,
     },
     Subscription: {
       messages: isAuthenticated,

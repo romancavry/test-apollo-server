@@ -7,9 +7,11 @@ const createDialogue = async (
 ) => {
   const { name } = args;
 
-  const createdDialogue = await prisma.dialogue.create({
+  const newDialogue = await prisma.dialogue.create({
     data: {
       name,
+      usersIds: [user!.id],
+      messagesIds: [],
       users: {
         connect: {
           id: user!.id,
@@ -18,7 +20,16 @@ const createDialogue = async (
     },
   });
 
-  return createdDialogue.id;
+  await prisma.user.update({
+    where: {
+      id: user!.id,
+    },
+    data: {
+      dialoguesIds: [...user!.dialoguesIds, newDialogue.id],
+    },
+  });
+
+  return newDialogue.id;
 };
 
 export default createDialogue;

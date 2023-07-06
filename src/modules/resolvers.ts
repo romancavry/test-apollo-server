@@ -3,7 +3,7 @@ import { getUser } from './auth/queries';
 
 // Mutations
 import { signup, login, verifyToken } from './auth/resolvers';
-import { createDialogue } from './dialogues/resolvers';
+import { createDialogue, getDialogues } from './dialogues/resolvers';
 import { postMessage } from './messages/resolvers';
 
 // Subscriptions
@@ -25,6 +25,7 @@ const resolvers = {
 
     // Dialogues
     createDialogue,
+    getDialogues,
   },
 
   Subscription: {

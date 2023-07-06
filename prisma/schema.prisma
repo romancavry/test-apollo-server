@@ -21,9 +21,11 @@ model User {
 model Dialogue {
   id           Int       @id @default(autoincrement())
   name         String
-  users        User[]
-  messages     Message[]
-  createdAt    DateTime @default(now())
+  users        User[]    @relation()
+  usersIds     Int[]
+  messages     Message[] @relation()
+  messagesIds  Int[]
+  createdAt    DateTime  @default(now())
 }
 
 model Message {
@@ -31,7 +33,7 @@ model Message {
   text       String
   sender     User     @relation(fields: [senderId], references: [id])
   senderId   Int
-  Dialogue   Dialogue @relation(fields: [dialogueId], references: [id])
+  dialogue   Dialogue @relation(fields: [dialogueId], references: [id])
   dialogueId Int
   createdAt  DateTime @default(now())
 }
