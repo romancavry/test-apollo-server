@@ -1,5 +1,7 @@
 type Query {
   getUser: User
+
+  getDialogues: [Dialogue]
 }
 
 type Mutation {
@@ -10,7 +12,6 @@ type Mutation {
   postMessage(text: String!): ID!
 
   createDialogue(name: String!): ID!
-  getDialogues(ids: [Int]!): [Dialogue]!
 }
 
 type Subscription {

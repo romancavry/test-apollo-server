@@ -8,10 +8,12 @@ const isAuthenticated = rule({ cache: 'contextual' })(
 
 export const permissions = shield(
   {
+    Query: {
+      getDialogues: isAuthenticated,
+    },
     Mutation: {
       createDialogue: isAuthenticated,
       postMessage: isAuthenticated,
-      getDialogues: isAuthenticated,
     },
     Subscription: {
       messages: isAuthenticated,

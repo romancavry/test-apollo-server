@@ -7,10 +7,14 @@ const createDialogue = async (
 ) => {
   const { name } = args;
 
+  // Create dialogue with all possible users included
+  const users = await prisma.user.findMany();
+  const usersIds = users.map(user => user.id);
+
   const newDialogue = await prisma.dialogue.create({
     data: {
       name,
-      usersIds: [user!.id],
+      usersIds,
       messagesIds: [],
       users: {
         connect: {

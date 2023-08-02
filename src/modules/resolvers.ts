@@ -11,7 +11,11 @@ import { messages } from './messages/subscriptions';
 
 const resolvers = {
   Query: {
+    // Auth
     getUser,
+
+    // Dialogues
+    getDialogues,
   },
 
   Mutation: {
@@ -25,7 +29,6 @@ const resolvers = {
 
     // Dialogues
     createDialogue,
-    getDialogues,
   },
 
   Subscription: {
