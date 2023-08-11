@@ -1,6 +1,8 @@
 type Query {
   getUser: User
 
+  getMessages(dialogueId: Int!): [Message]
+
   getDialogues: [Dialogue]
 }
 
@@ -9,7 +11,7 @@ type Mutation {
   login(email: String!, password: String!): AuthPayload
   verifyToken(token: String!): AuthPayload
 
-  postMessage(text: String!): ID!
+  postMessage(text: String!, dialogueId: Int!): ID!
 
   createDialogue(name: String!): ID!
 }

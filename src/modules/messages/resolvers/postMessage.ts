@@ -7,13 +7,26 @@ const postMessage = async (
   args: { text: string; dialogueId: number },
   { prisma, user }: Context,
 ) => {
-  const { text } = args;
+  const { text, dialogueId } = args;
 
   const createdMessage = await prisma.message.create({
     data: {
       text,
-      dialogueId: 1, // TODO
+      dialogueId,
       senderId: user!.id,
+    },
+  });
+
+  const targetDialogue = await prisma.dialogue.findUnique({
+    where: { id: dialogueId },
+  });
+
+  await prisma.dialogue.update({
+    where: {
+      id: dialogueId,
+    },
+    data: {
+      messagesIds: [...targetDialogue!.messagesIds, createdMessage.id],
     },
   });
 
